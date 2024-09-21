@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User, {IUser} from '../models/User'
 
+const secret = process.env.JWT_SECRET || "jwt_secret"
+
 const signupUser= async (req: Request, res: Response) =>{
    
     try {
@@ -52,6 +54,8 @@ const signupUser= async (req: Request, res: Response) =>{
     }
 }
 
+
+
 const signinUser = async (req: Request, res: Response) =>{
     const { email, password} = req.body;
     try {
@@ -67,7 +71,7 @@ const signinUser = async (req: Request, res: Response) =>{
           return res.status(400).send({ message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ email: user.email, id: user._id }, "jwtSecret",  { expiresIn: '30d' });
+        const token = jwt.sign({ email: user.email, id: user._id }, "jwtsecret" , { expiresIn: '30d' });
 
         if (user && isPasswordValid) {
         res.status(201).json({

@@ -3,8 +3,8 @@ import mongoose,{Document, Schema} from "mongoose";
 export interface ITask extends Document{
     title: string;
     description?: string;
-    status: 'todo' | 'inprogress' | 'underreview' | 'finished';
-    priority?: 'low' | ' medium' | 'urgent';
+    status: 'todo' | 'inprogress' | 'completed';
+    priority?: 'low' | ' medium' | 'high';
     deadline?: Date;
     createdAt?: Date;
     createdDaysAgo?: number;
@@ -21,13 +21,13 @@ const TaskSchema: Schema<ITask> = new mongoose.Schema({
     },
     status: {
          type: String,
-     enum: ['todo', 'inprogress', 'underreview', 'finished'], 
+     enum: ['todo', 'inprogress','completed'], 
      required: true 
     },
     priority: { 
         type: String, 
-        enum: ['urgent', 'low', 'medium'], 
-        default: 'medium'
+        enum: ['high', 'low', 'medium'], 
+        default: 'low'
      },
      deadline: {
         type: Date,

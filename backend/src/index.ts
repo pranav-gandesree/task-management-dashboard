@@ -2,8 +2,9 @@ import express, { Request, Response } from 'express';
 
 import connectDb from './config';
 
-const authRoutes = require('./routes/authRoute')
-const taskRoutes = require('./routes/taskRoute')
+import authRoutes from './routes/authRoute';
+import taskRoutes from './routes/taskRoute';
+
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -13,6 +14,7 @@ dotenv.config();
 // const taskRoutes = require('./routes/taskRoute')
 
 import cors from 'cors';
+import verifyToken from './middleware';
 
 
 const app = express();
@@ -31,6 +33,9 @@ const port = process.env.PORT || 4000;
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello world!');
 });
+
+
+
 
 //middleware for json parser
 app.use(express.json())

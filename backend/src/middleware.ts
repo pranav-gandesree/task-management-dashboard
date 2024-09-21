@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import User from './models/User';
-import { clearScreenDown } from 'readline';
+
+const secret = process.env.JWT_SECRET || "jwt_secret"
 
 const verifyToken = async (req: any, res: Response, next: NextFunction) => {
     try {
@@ -17,7 +18,7 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
             return res.status(401).send("Token not found");
         }
 
-        const payload = jwt.verify(accessToken, "jwtSecret");
+        const payload = jwt.verify(accessToken, "jwtsecret" );
 
         const { id } = payload as any;
 

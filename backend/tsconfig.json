@@ -3,7 +3,7 @@
 
     "target": "es2016",                                 
     "rootDir": "./src",                             
-    // "typeRoots": ["./node_modules/@types", "./src/types/index.d.ts"],                                   
+    "typeRoots": ["./node_modules/@types", "./src/types/index.d.ts"],                                   
     "outDir": "./dist",                                   
     "esModuleInterop": true,                           
     "forceConsistentCasingInFileNames": true,            
@@ -13,6 +13,6 @@
     "resolveJsonModule": true,                          
   },
   
-  "include": ["src/**/*.ts", "custom.d.ts"],
+  "include": ["src/**/*.ts", "types/**/*.d.ts"],
    "exclude": ["node_modules"],
 }

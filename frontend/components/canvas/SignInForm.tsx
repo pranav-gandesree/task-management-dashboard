@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -6,24 +8,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 
+import { useUser } from '@/context/UserContext';
+
+
 const SignInForm = () => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const { setUser } = useUser();
   const router = useRouter();
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:4000/api/auth/signin', { email, password });
-      localStorage.setItem('token', response.data.token);
+      console.log(response);
+      const { token, username, email: userEmail, id } = response.data; // Assuming 'id' is returned by the backend
+  
+      localStorage.setItem('token', token);
+      setUser({ id, token, username, email: userEmail }); // Setting the user ID along with other fields
       router.push('/dashboard');
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -88,3 +100,7 @@ const SignInForm = () => {
 };
 
 export default SignInForm;
+
+
+
+
