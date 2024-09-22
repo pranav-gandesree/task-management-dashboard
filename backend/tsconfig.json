@@ -3,7 +3,7 @@
 
     "target": "es2016",                                 
     "rootDir": "./src",   
-    "module": "commonjs",                         
+    "module": "esnext",                         
     "typeRoots": ["./node_modules/@types", "./src/types/index.d.ts"],                                   
     "outDir": "./dist",                                   
     "esModuleInterop": true,                           
