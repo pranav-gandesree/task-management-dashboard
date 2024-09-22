@@ -23,7 +23,6 @@ dotenv.config();
 
 app.use(cors({
   origin: 'http://localhost:3000', // Replace with your client app's URL
-  methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', "Authorization"],
 }));
 

@@ -18,7 +18,7 @@ import { useUser } from '@/context/UserContext'
 import { redirect } from 'next/navigation'
 
 export default function TaskListPage() {
-  const { tasks, addTask, updateTask, deleteTask } = useTaskContext()
+  const { tasks, addTask, updateTask, deleteTask, setTasks } = useTaskContext()
   const [filter, setFilter] = useState<TaskStatus | 'All'>('All')
   const [sort, setSort] = useState<'createdAt' | 'title'>('createdAt')
   const [isAddingTask, setIsAddingTask] = useState(false)
@@ -70,7 +70,7 @@ useEffect(() => {
   };
 
   fetchTasks();
-}, []);
+}, [setTasks]);
 
 
   const filteredTasks = fetchedTasks
@@ -102,7 +102,7 @@ useEffect(() => {
         setFetchedTasks(prevTasks => [...prevTasks, result]);
         // setNewTask({ title: '', description: '', status: 'todo', priority: 'low' });
            // Add the task to the TaskContext
-    addTask(result);
+       addTask(result);
         setIsAddingTask(false);
       } catch (error) {
         console.error(error);

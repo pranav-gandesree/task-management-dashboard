@@ -85,6 +85,35 @@ const deleteTask = async (req: any, res: Response,next: NextFunction) => {
 
 
 
+// @desc  Update tasks
+// @route  POST /api/tasks/updatetasks
+const updateTasks = async (req: any, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  const updatedTasks = req.body; // Assuming an array of updated tasks
+
+  try {
+    const bulkOps = updatedTasks.map((task: any) => ({
+      updateOne: {
+        filter: { _id: task._id, user: req.user._id },
+        update: { $set: { title: task.title, description: task.description, status: task.status, priority: task.priority, deadline: task.deadline } },
+      },
+    }));
+
+    await Task.bulkWrite(bulkOps);
+
+    res.status(200).json({
+      message: "Tasks updated successfully",
+      tasks: updatedTasks,
+    });
+  } catch (error) {
+    next(error); // Make sure to pass errors to the next middleware
+  }
+};
+
+export { createTask, deleteTask, getTasks, updateTasks };
 
 
-export { createTask, deleteTask, getTasks };
