@@ -1,9 +1,8 @@
-import KanbanBoard from "@/components/canvas/KanbanBoard";
+
+import LandingPage from "@/components/canvas/LandingPage";
 
 export default function Home() {
   return (
-  <div>
-    <KanbanBoard/>
-  </div>
+    <LandingPage/>
   );
 }

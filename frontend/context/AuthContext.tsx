@@ -1,4 +1,4 @@
-// app/context/AuthContext.tsx
+
 
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
@@ -25,21 +25,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token) {
       setUser({ token });
     } else {
-      router.push('/login'); // Redirect to login if not authenticated
+      router.push('/login'); 
     }
   }, [router]);
 
   const login = (userData: User) => {
     setUser(userData);
     localStorage.setItem('token', userData.token);
-    router.push('/dashboard'); // Redirect after login
+    router.push('/dashboard'); 
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('token');
-    router.push('/signin'); // Redirect to login on logout
-  };
+    router.push('/signin')
+  }
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

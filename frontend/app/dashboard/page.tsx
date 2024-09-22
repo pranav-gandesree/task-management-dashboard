@@ -1,6 +1,4 @@
 
-
-
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -15,10 +13,13 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useUser } from '@/context/UserContext'
-import { redirect } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
+import { useToast } from '@/hooks/use-toast'
+
+
 
 export default function TaskListPage() {
-  const { tasks, addTask, updateTask, deleteTask, setTasks } = useTaskContext()
+  const {  addTask } = useTaskContext()
   const [filter, setFilter] = useState<TaskStatus | 'All'>('All')
   const [sort, setSort] = useState<'createdAt' | 'title'>('createdAt')
   const [isAddingTask, setIsAddingTask] = useState(false)
@@ -31,46 +32,56 @@ export default function TaskListPage() {
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [fetchedTasks, setFetchedTasks] = useState<Task[]>([])
 
-  const { user } = useUser();
+  const { user, loading } = useUser();
+
+  const router = useRouter()
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      redirect('/signin'); 
+    }
+  }, [loading, user, router]);
+
+
 
     // Include user ID in the newTask object
     const taskToAdd = {
       ...newTask,
-      userId: user?.id // Add user ID if user is defined
+      userId: user?.id 
     };
   
-
-  if (!user) {
-    redirect('/signin')
-  }
 
 
 
   // Fetch tasks from the backend when component mounts
 useEffect(() => {
   const fetchTasks = async () => {
-    const token = localStorage.getItem('token'); // Retrieve token from local storage
+    const token = localStorage.getItem('token'); 
     const response = await fetch('http://localhost:4000/api/tasks/gettasks', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+        'Authorization': `Bearer ${token}` 
       }
     });
 
     if (!response.ok) {
-      // Handle error if needed
+   
       console.error('Failed to fetch tasks:', response.statusText);
       return;
     }
 
     const data = await response.json();
     console.log(data)
-    setFetchedTasks(data); // Assuming your API returns a list of tasks
+    setFetchedTasks(data); 
   };
 
-  fetchTasks();
-}, [setTasks]);
+
+  if (user) { // Only fetch tasks if user is logged in
+    fetchTasks();
+  }
+}, [user]);
 
 
   const filteredTasks = fetchedTasks
@@ -104,9 +115,20 @@ useEffect(() => {
            // Add the task to the TaskContext
        addTask(result);
         setIsAddingTask(false);
+
+        toast({
+          title: "Task Created",
+          description: "Your task has been successfully created.",
+          duration: 3000
+        });
+
       } catch (error) {
         console.error(error);
-        // Optionally, display an error message to the user
+        toast({
+          title: "Oops!",
+          description: "Error creating the task.",
+          duration: 3000
+        });
       }
     };
     
@@ -135,10 +157,10 @@ useEffect(() => {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">Task List</h1>
-      <h1>Welcome, {user?.username}!</h1>
-      <p>Email: {user?.email}</p>
+      <h1 className='text-2xl'>Welcome, {user?.username}!</h1>
+
       <div className="flex justify-between items-center">
-        <div className="space-x-2">
+        <div className="space-x-2 flex flex-row">
           <Select onValueChange={(value) => setFilter(value as TaskStatus | 'All')}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter by status" />

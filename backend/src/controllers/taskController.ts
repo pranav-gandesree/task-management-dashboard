@@ -1,13 +1,12 @@
-import express, { NextFunction, Request, Response } from "express";
+import  { NextFunction, Response } from "express";
 import Task from "../models/Task";
-import User from "../models/User";
 
 // @desc  Get user tasks
 // @route  GET /api/tasks
 
 const getTasks = async (req: any, res: Response, next: NextFunction) => {
   console.log("GET /api/tasks/gettasks route hit");
-  console.log("User:", req.user); // Log user information
+  console.log("User:", req.user); 
 
   if (!req.user) {
     res.status(401);
@@ -18,7 +17,7 @@ const getTasks = async (req: any, res: Response, next: NextFunction) => {
     const tasks = await Task.find({ user: req.user._id });
     res.status(200).json(tasks);
   } catch (error) {
-    next(error); // Make sure to pass errors to the next middleware
+    next(error); 
   }
 };
 
@@ -79,7 +78,7 @@ const deleteTask = async (req: any, res: Response,next: NextFunction) => {
         await Task.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: 'Task deleted' });
     } catch (error) {
-        next(error); // Make sure to pass errors to the next middleware
+        next(error);
     }
 }
 
@@ -93,7 +92,7 @@ const updateTasks = async (req: any, res: Response, next: NextFunction) => {
     throw new Error("User not found");
   }
 
-  const updatedTasks = req.body; // Assuming an array of updated tasks
+  const updatedTasks = req.body; 
 
   try {
     const bulkOps = updatedTasks.map((task: any) => ({
@@ -110,7 +109,7 @@ const updateTasks = async (req: any, res: Response, next: NextFunction) => {
       tasks: updatedTasks,
     });
   } catch (error) {
-    next(error); // Make sure to pass errors to the next middleware
+    next(error); 
   }
 };
 

@@ -1,52 +1,114 @@
+
 'use client'
 
-import Link from 'next/link';
-import { Button } from "@/components/ui/button";
-import { useUser } from '@/context/UserContext';
-import { useAuth } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useUser } from '@/context/UserContext'
+import { useRouter } from 'next/navigation'
+import { LayoutDashboard, KanbanSquare, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const Sidebar = () => {
-  const { user,setUser } = useUser(); 
-  const router = useRouter();
+  const { user, setUser } = useUser()
+  const router = useRouter()
+  const pathname = usePathname()
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem('token');
-    router.push('/signin'); // Redirect to login on logout
-  };
-  return (
-    <div className="flex h-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
-      <aside className="w-64 bg-slate-600 shadow-md flex flex-col justify-between">
-        <nav className="p-5 space-y-2">
-          <Link href="/dashboard/">
-            <Button variant="ghost" className="w-full justify-start">
-              Task List
-            </Button>
-          </Link>
-          <Link href="/dashboard/kanban">
-            <Button variant="ghost" className="w-full justify-start">
-              Kanban Board
-            </Button>
-          </Link>
-        </nav>
+    setUser(null)
+    localStorage.removeItem('token')
+    router.push('/signin')
+  }
 
-        <div className="p-5 border-t border-neutral-800">
-          <div className="mb-4">
-            <h1 className="text-white font-semibold">Welcome, {user?.username}!</h1>
-            <p className="text-neutral-300 text-sm">Email: {user?.email}</p>
-          </div>
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-red-500"
-            onClick={logout} // Trigger logout function when button is clicked
+  const navItems = [
+    { href: '/dashboard', label: 'Task List', icon: LayoutDashboard },
+    { href: '/dashboard/kanban', label: 'Kanban Board', icon: KanbanSquare },
+  ]
+
+  return (
+    <motion.aside
+      initial={{ width: 256 }}
+      animate={{ width: isCollapsed ? 80 : 256 }}
+      transition={{ duration: 0.3 }}
+      className="h-screen bg-neutral-900 text-white flex flex-col justify-between shadow-lg relative"
+    >
+      {/* <Button
+        variant="ghost"
+        size="icon"
+        className="absolute -right-3 top-6 bg-neutral-800 text-white rounded-full shadow-md"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      >
+        {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+      </Button> */}
+
+      <div>
+        <div className="p-4 mb-6">
+          <motion.h2
+            initial={{ opacity: 1 }}
+            animate={{ opacity: isCollapsed ? 0 : 1 }}
+            transition={{ duration: 0.2 }}
+            className="text-2xl font-bold"
+          >
+            <span className="text-purple-500">Workflo</span>!
+          </motion.h2>
+        </div>
+
+        <nav className="space-y-2 px-2 flex flex-col">
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <Button
+                variant={pathname === item.href ? "secondary" : "ghost"}
+                className={`w-full justify-start ${isCollapsed ? 'px-2' : 'px-4'}`}
+              >
+                <item.icon className="mr-2" size={20} />
+                <motion.span
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: isCollapsed ? 0 : 1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {item.label}
+                </motion.span>
+              </Button>
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      <div className="p-4 border-t border-neutral-800">
+        <div className="flex items-center space-x-4 mb-4">
+          <Avatar>
+            {/* <AvatarImage src={user} alt={user?.username} /> */}
+            <AvatarFallback>{user?.username?.charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
+          <motion.div
+            initial={{ opacity: 1 }}
+            animate={{ opacity: isCollapsed ? 0 : 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            <p className="font-semibold">{user?.username}</p>
+            <p className="text-sm text-neutral-400">{user?.email}</p>
+          </motion.div>
+        </div>
+        <Button
+          variant="destructive"
+          className="w-full justify-start"
+          onClick={logout}
+        >
+          <LogOut className="mr-2" size={20} />
+          <motion.span
+            initial={{ opacity: 1 }}
+            animate={{ opacity: isCollapsed ? 0 : 1 }}
+            transition={{ duration: 0.2 }}
           >
             Logout
-          </Button>
-        </div>
-      </aside>
-    </div>
-  );
+          </motion.span>
+        </Button>
+      </div>
+    </motion.aside>
+  )
 }
 
-export default Sidebar;
+export default Sidebar

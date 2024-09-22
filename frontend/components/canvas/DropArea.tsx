@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 
 interface DropAreaProps {
-    onDrop: () => void; // Define the type for onDrop
+    onDrop: () => void; 
   }
   
   const DropArea: React.FC<DropAreaProps> = ({ onDrop }) => {

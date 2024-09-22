@@ -1,56 +1,3 @@
-// 'use client'
-
-
-// // UserContext.tsx
-// import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-// interface User {
-//   id: string,
-//   token: string;
-//   username: string;
-//   email: string;
-// }
-
-// interface UserContextType {
-//   user: User | null;
-//   setUser: (user: User) => void;
-// }
-
-// const UserContext = createContext<UserContextType | undefined>(undefined);
-
-// export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-//   const [user, setUser] = useState<User | null>(null);
-
-//   return (
-//     <UserContext.Provider value={{ user, setUser }}>
-//       {children}
-//     </UserContext.Provider>
-//   );
-// };
-
-// export const useUser = () => {
-//   const context = useContext(UserContext);
-//   if (!context) {
-//     throw new Error("useUser must be used within a UserProvider");
-//   }
-//   return context;
-// };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 'use client'
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
@@ -64,6 +11,7 @@ interface User {
 
 interface UserContextType {
   user: User | null;
+  loading: boolean; // Add loading state
   setUser: (user: User | null) => void;
 }
 
@@ -71,13 +19,14 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); 
 
-  // Load user from localStorage on initial render
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    setLoading(false); 
   }, []);
 
   // Save user to localStorage whenever it changes
@@ -90,7 +39,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [user]);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, loading, setUser }}>
       {children}
     </UserContext.Provider>
   );
@@ -103,3 +52,14 @@ export const useUser = () => {
   }
   return context;
 };
+
+
+
+
+
+
+
+
+
+
+

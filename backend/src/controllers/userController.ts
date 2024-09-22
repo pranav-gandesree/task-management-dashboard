@@ -2,18 +2,13 @@
 import  {Request, Response} from "express"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User, {IUser} from '../models/User'
-
-const secret = process.env.JWT_SECRET || "jwt_secret"
+import User from '../models/User'
 
 const signupUser= async (req: Request, res: Response) =>{
    
     try {
       const { username, email, password } = req.body;
 
-      console.log(username,email,password)
-
-      // Validate input
       if (!username || !email || !password) {
         return res.status(400).json({ message: 'All fields are required' });
       }
@@ -41,7 +36,7 @@ const signupUser= async (req: Request, res: Response) =>{
                 _id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
-                // token: generateToken(newUser._id)
+              
             })
         } else {
             res.status(400);

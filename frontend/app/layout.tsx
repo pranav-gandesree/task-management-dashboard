@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-import { TaskProvider } from '@/context/TaskContext'
+import { TaskProvider } from "@/context/TaskContext";
 // import { AuthProvider } from "@/context/AuthContext";
+import { Toaster } from "@/components/ui/toaster";
 
-import { UserProvider } from '../context/UserContext';
+import { UserProvider } from "../context/UserContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -18,14 +19,10 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-
 export const metadata: Metadata = {
-  title: 'Task Management Dashboard',
-  description: 'Manage your tasks with ease',
-}
-
-
-
+  title: "Workflo!",
+  description: "Manage your tasks with ease",
+};
 
 export default function RootLayout({
   children,
@@ -34,17 +31,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-
       <UserProvider>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-950 `}
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-950 `}
         >
-         <TaskProvider>
-          {children}
-        </TaskProvider>
-      </body>
+          <TaskProvider>
+            {children}
+            <Toaster />
+          </TaskProvider>
+        </body>
       </UserProvider>
-
     </html>
   );
 }

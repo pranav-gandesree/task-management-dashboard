@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import User from './models/User';
 
-const secret = process.env.JWT_SECRET || "jwt_secret"
 
 const verifyToken = async (req: any, res: Response, next: NextFunction) => {
     try {
