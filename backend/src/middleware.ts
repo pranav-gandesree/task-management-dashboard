@@ -1,9 +1,15 @@
-import jwt from 'jsonwebtoken';
-import { Response, NextFunction } from 'express';
-import User from './models/User';
+import { NextFunction, Request, Response } from "express";
+
+import jwt from "jsonwebtoken";
+import User from "./models/User";
 
 
-const verifyToken = async (req: any, res: Response, next: NextFunction) => {
+// Custom request interface
+interface CustomRequest extends Request {
+    user?: any; // Adjust type as needed
+}
+
+const verifyToken = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
         const { authorization } = req.headers;
 
@@ -17,7 +23,7 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
             return res.status(401).send("Token not found");
         }
 
-        const payload = jwt.verify(accessToken, "jwtsecret" );
+        const payload = jwt.verify(accessToken, "jwtsecret");
 
         const { id } = payload as any;
 
@@ -31,7 +37,7 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
             return res.status(404).send("User not registered");
         }
 
-        req.user = user;
+        req.user = user; // Attach user to the request object
         next();
     } catch (error: any) {
         console.error("Token verification error:", error);

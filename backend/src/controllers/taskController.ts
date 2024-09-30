@@ -1,5 +1,6 @@
 import  { NextFunction, Response } from "express";
-import Task from "../models/Task";
+
+const Task = require('../models/Task')
 
 // @desc  Get user tasks
 // @route  GET /api/tasks

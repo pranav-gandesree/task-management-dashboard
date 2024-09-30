@@ -1,19 +1,17 @@
-import express, { Request, Response } from "express";
+import  express from "express";
+import connectDb from './config'
+import dotenv from 'dotenv'
+import cors from 'cors'
 
-import connectDb from "./config";
+import taskRoutes from './routes/taskRoute'
+import authRoutes from './routes/authRoute'
 
-import authRoutes from "./routes/authRoute";
-import taskRoutes from "./routes/taskRoute";
-
-import dotenv from "dotenv";
+// Load environment variables
 dotenv.config();
-
-import cors from "cors";
 
 const app = express();
 
-dotenv.config();
-
+// Middleware setup
 app.use(
   cors({
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -22,15 +20,15 @@ app.use(
 
 const port = process.env.PORT || 4000;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello world!");
-});
 
+// JSON body parser
 app.use(express.json());
 
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
+// Start the server
 app.listen(port, async () => {
   await connectDb();
   console.log(`Server is running on port ${port}`);
